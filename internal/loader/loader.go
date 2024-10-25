@@ -221,12 +221,16 @@ func normalizePackage(opts *config.IndexOpts, pkg *packages.Package) *packages.P
 	}
 
 	if pkg.Module.Path == "" {
-		log.Errorf(
-			"Should not be possible to have nil module for userland package: %s %s",
-			pkg,
-			pkg.PkgPath,
-		)
-		pkg.Module.Path = "."
+		if opts.ModulePath != "" {
+			pkg.Module.Path = opts.ModulePath
+		} else {
+			log.Errorf(
+				"Should not be possible to have nil module for userland package: %s %s",
+				pkg,
+				pkg.PkgPath,
+			)
+			pkg.Module.Path = "."
+		}
 	}
 
 	if pkg.Module.Version == "" {
