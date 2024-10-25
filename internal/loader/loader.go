@@ -175,15 +175,10 @@ func normalizePackage(opts *config.IndexOpts, pkg *packages.Package) *packages.P
 		// We strip that to standardize all the libraries to make sure we are able to jump-to-definition
 		// of the standard library.
 		pkg.PkgPath = strings.TrimPrefix(pkg.PkgPath, "std/")
-	} else {
-		if pkg.Module == nil {
-			panic(fmt.Sprintf(
-				"Should not be possible to have nil module for userland package: %s %s",
-				pkg,
-				pkg.PkgPath,
-			))
-		}
+	}
 
+	if pkg.Module == nil {
+		pkg.Module = &packages.Module{}
 	}
 
 	// Follow replaced modules
@@ -226,6 +221,11 @@ func normalizePackage(opts *config.IndexOpts, pkg *packages.Package) *packages.P
 	}
 
 	if pkg.Module.Path == "" {
+		log.Errorf(
+			"Should not be possible to have nil module for userland package: %s %s",
+			pkg,
+			pkg.PkgPath,
+		)
 		pkg.Module.Path = "."
 	}
 
