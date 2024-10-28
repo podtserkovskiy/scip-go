@@ -104,7 +104,7 @@ func LoadPackages(
 		}()
 
 		cfg := getConfig(moduleRoot, opts)
-		pkgs, err := packages.Load(cfg, "./...")
+		pkgs, err := packages.Load(cfg, opts.PackagePatters...)
 		if err != nil {
 			return err
 		}
